@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ArticleModule } from './article/article.module';
 import { validate } from './env.validation';
 import { TypeOrmConfigService } from './type-orm-config.service';
 
@@ -16,6 +17,7 @@ import { TypeOrmConfigService } from './type-orm-config.service';
       imports: [ConfigModule],
       useClass: TypeOrmConfigService,
     }),
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [AppService, TypeOrmConfigService],
