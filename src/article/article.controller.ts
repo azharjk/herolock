@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ArticleService } from './article.service';
-import { CreateArticleBody } from './body/create-article.body';
+import { CommonArticleBody } from './dto/common-article.body';
+import { IdArticleParam } from './dto/id-article.param';
 
 @Controller('articles')
 export class ArticleController {
@@ -11,8 +20,23 @@ export class ArticleController {
     return this.articleService.findMany();
   }
 
+  @Get(':id')
+  findOne(@Param() param: IdArticleParam) {
+    return this.articleService.findOne(param.id);
+  }
+
   @Post()
-  create(@Body() article: CreateArticleBody) {
+  create(@Body() article: CommonArticleBody) {
     return this.articleService.create(article);
+  }
+
+  @Put(':id')
+  update(@Param() param: IdArticleParam, @Body() article: CommonArticleBody) {
+    return this.articleService.update(param.id, article);
+  }
+
+  @Delete(':id')
+  delete(@Param() param: IdArticleParam) {
+    return this.articleService.delete(param.id);
   }
 }

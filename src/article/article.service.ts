@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Article } from './article.entity';
-import { CreateArticle } from './types/create-article';
+import { CommonArticle } from './types/common-article';
 
 @Injectable()
 export class ArticleService {
@@ -14,8 +14,28 @@ export class ArticleService {
     return this.articleRepository.find();
   }
 
-  create(article: CreateArticle) {
-    const articleEntity = this.articleRepository.create(article);
-    return this.articleRepository.save(articleEntity);
+  findOne(id: number) {
+    return this.articleRepository.findOneBy({
+      id,
+    });
+  }
+
+  create(article: CommonArticle) {
+    return this.articleRepository.save(article);
+  }
+
+  update(id: number, article: CommonArticle) {
+    return this.articleRepository.update(
+      {
+        id,
+      },
+      article,
+    );
+  }
+
+  delete(id: number) {
+    return this.articleRepository.delete({
+      id,
+    });
   }
 }
