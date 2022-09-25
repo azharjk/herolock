@@ -6,12 +6,15 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthenticatedGuard } from 'src/authentication/authenticated.guard';
 import { ArticleService } from './article.service';
 import { CommonArticleBody } from './dto/common-article.body';
 import { IdArticleParam } from './dto/id-article.param';
 
 @Controller('articles')
+@UseGuards(AuthenticatedGuard)
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
 
