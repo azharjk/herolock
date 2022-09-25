@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Request } from 'express';
-import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { CommonAuthentication } from './types/common-authentication';
 
@@ -8,7 +7,10 @@ import { CommonAuthentication } from './types/common-authentication';
 export class AuthenticationService {
   constructor(private userService: UserService) {}
 
-  attempt(user: User, password: string) {
+  async attempt(username: string, password: string) {
+    const user = await this.userService.findOneByUsername(username);
+    if (!user) return false;
+
     return user.password === password;
   }
 
@@ -22,10 +24,8 @@ export class AuthenticationService {
   }
 
   async login(form: CommonAuthentication) {
-    const user = await this.userService.findOneByUsername(form.username);
-    if (!user) throw new BadRequestException();
-
-    if (!this.attempt(user, form.password)) throw new BadRequestException();
+    const success = await this.attempt(form.username, form.password);
+    if (!success) throw new BadRequestException();
   }
 
   async verify(request: Request) {
@@ -37,10 +37,7 @@ export class AuthenticationService {
     const buffer = Buffer.from(base64Credentials, 'base64');
     const [username, password] = buffer.toString('ascii').split(':');
 
-    const user = await this.userService.findOneByUsername(username);
-
-    if (!user) return false;
-
-    return this.attempt(user, password);
+    const success = await this.attempt(username, password);
+    return success;
   }
 }
