@@ -20,6 +20,6 @@ import { TypeOrmConfigService } from './type-orm-config.service';
     ArticleModule,
   ],
   controllers: [AppController],
-  providers: [AppService, TypeOrmConfigService],
+  providers: [AppService],
 })
 export class AppModule {}
